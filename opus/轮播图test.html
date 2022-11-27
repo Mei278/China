@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .banner {
+            width: 600px;
+            margin: auto;
+            border: 10px solid green;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .imgList img {
+            width: 600px;
+            height: 350px;
+        }
+        
+        .imgList {
+            position: absolute;
+        }
+        
+        .imgList li {
+            float: left;
+            margin-right: 20px;
+            list-style: none;
+        }
+        
+        .circle {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .circle a {
+            width: 15px;
+            height: 15px;
+            background: green;
+            border-radius: 50%;
+            opacity: .8;
+            float: left;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .circle a.hover {
+            background: black;
+            opacity: .7;
+        }
+    </style>
+</head>
+ 
+<body>
+    <div class="banner">
+ 
+        <ul class="imgList">
+            <li><img src="bg10.jpg" /></li>
+            <li><img src="dang.jpg" /></li>
+            <li><img src="speed.jpg" /></li>
+            <li><img src="teen.png" /></li>
+        </ul>
+        <div class="circle">
+        </div>
+    </div>
+ 
+ 
+ 
+ 
+    <script type="text/javascript">
+        var imgList = document.querySelector('.imgList');
+        var circle = document.querySelector('.circle');
+        var circleA = circle.children;
+        var imgListli = imgList.children;
+        var thisIndex = 0;
+        var flag = true;
+ 
+        window.onload = function() {
+ 
+            imgList.style.width = imgList.children.length * 620 + 'px';
+ 
+            autoChange();
+ 
+            for (var i = 0; i < imgList.children.length; i++) {
+                var aNode = document.createElement('a');
+                aNode.setAttribute('index', i);
+                circle.appendChild(aNode);
+            }
+ 
+            circle.addEventListener('click', function(e) {
+                if (e.target.nodeName != 'A') {
+                    return false;
+                }
+ 
+                if (flag) {
+                    flag = false;
+                    var thisIndex = e.target.getAttribute('index');
+                    tIndex = e.target.getAttribute('index') * 1 + 1;
+                    slow(imgList, -thisIndex * 620, function() {
+                        flag = true;
+                    });
+                    circlechange(thisIndex);
+                }
+ 
+            })
+            var tIndex = 1;
+ 
+            function autoChange() {
+ 
+                setInterval(function() {
+                    if (flag) {
+                        flag = false;
+                        if (tIndex >= imgListli.length) {
+                            tIndex = 0;
+                        }
+                        slow(imgList, -tIndex * 620, function() {
+                            flag = true;
+                        });
+                        circlechange(tIndex);
+                        tIndex++;
+                    }
+                }, 3000)
+ 
+            }
+ 
+            function circlechange(t) {
+                for (var i = 0; i < circleA.length; i++) {
+                    circleA[i].className = '';
+                }
+                circleA[t].className = 'hover';
+            }
+ 
+            function slow(obj, target, getflag) {
+                obj.myInter = setInterval(function() {
+                    var offsetLeft = obj.offsetLeft;
+                    var num = (target - offsetLeft) / 10;
+                    num > 0 ? num = Math.ceil(num) : num = Math.floor(num);
+                    if (offsetLeft == target) {
+                        clearInterval(obj.myInter);
+                        getflag && getflag();
+                    } else {
+                        obj.style.left = offsetLeft + num + 'px';
+                    }
+                }, 10)
+            }
+ 
+        }
+    </script>
+ 
+</body>
+ 
+</html>
